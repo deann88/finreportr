@@ -60,7 +60,7 @@ GetFinancial <- function(symbol, year) {
      ##   Get Role ID from Instance Document
      role.df <- instFile$role %>%
           #filter(toupper(description) %in% statement.type)
-          filter(type %in% "Statement")
+          filter(type %in% c("Statement", "statement"))
 
      role.id <- as.character(role.df$roleId)
 
