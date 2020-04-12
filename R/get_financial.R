@@ -55,10 +55,10 @@ GetFinancial <- function(symbol, year) {
                  "out_elements.csv", "out_facts.csv", "out_footnotes.csv", 
                  "out_labels.csv", "out_presentations.csv", "out_roles.csv", "out_units.csv")
      
-     on.exit(unlink("XBRLcache", recursive = TRUE))
+     unlink("XBRLcache", recursive = TRUE)
      
      ##   Get Role ID from Instance Document
-     role.df <- instFile$role #%>%
+     role.df <- instFile$role %>%
           #filter(toupper(description) %in% statement.type)
           filter(type %in% "statement")
 
