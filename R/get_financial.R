@@ -100,22 +100,16 @@ GetFinancial <- function(symbol, year) {
                     )
           )
 
-     clean.statement <- select(
-          statement, 
-          labelString,
-          unitId,
-          fact, 
-          startDate,
-          endDate, 
-          rowid,
-          source
-     )
+     clean.statement <- statement %>% 
+          arrange(rowid) %>%
+          select(
+               metric =labelString,
+               units = unitId,
+               amount = fact, 
+               start_date = startDate,
+               end_date = endDate, 
+               source = description
+          )
 
-     colnames(clean.statement)[1] <- "Metric"
-     colnames(clean.statement)[2] <- "Units"
-     colnames(clean.statement)[3] <- "Amount"
-
-     clean.statement <- arrange(clean.statement, rowid)
-     clean.statement <- select(clean.statement, -rowid)
-     return(clean.statement)
+     clean.statement
 }
