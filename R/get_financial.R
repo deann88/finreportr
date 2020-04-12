@@ -107,7 +107,8 @@ GetFinancial <- function(symbol, year) {
           fact, 
           startDate,
           endDate, 
-          rowid
+          rowid,
+          source
      )
 
      colnames(clean.statement)[1] <- "Metric"
