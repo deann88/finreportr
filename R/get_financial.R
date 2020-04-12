@@ -55,18 +55,20 @@ GetFinancial <- function(statement.type, symbol, year) {
                  "out_elements.csv", "out_facts.csv", "out_footnotes.csv", 
                  "out_labels.csv", "out_presentations.csv", "out_roles.csv", "out_units.csv")
      
-     unlink("XBRLcache", recursive = TRUE)
+     on.exit(unlink("XBRLcache", recursive = TRUE))
      
      ##   Get Role ID from Instance Document
-     role.df <- instFile$role %>%
-          filter(toupper(description) %in% statement.type)
+     role.df <- instFile$role #%>%
+          #filter(toupper(description) %in% statement.type)
+          filter(type %in% "statement")
 
      role.id <- as.character(role.df$roleId)
 
      ##   Create statement template from Presentation Linkbase
      statement.skeleton <-
           instFile$presentation %>%
-          filter(roleId == role.id)
+          #filter(roleId == role.id)
+          filter(roleId %in% role.id)
 
      rowid <- c(1:nrow(statement.skeleton))
      statement.skeleton <- mutate(statement.skeleton, rowid = rowid)
@@ -88,10 +90,25 @@ GetFinancial <- function(statement.type, symbol, year) {
 
      ##   Clean combined table
      statement <- subset(statement, is.na(statement$dimension1))
+     
+     statement <- statement %>% 
+          left_join(
+               role.df %>% 
+                    select(
+                         roleId, 
+                         description
+                    )
+          )
 
-     clean.statement <- select(statement, labelString, unitId, fact, contextId, 
-                               startDate, endDate, rowid)
-     clean.statement <- select(clean.statement, -contextId)
+     clean.statement <- select(
+          statement, 
+          labelString,
+          unitId,
+          fact, 
+          startDate,
+          endDate, 
+          rowid
+     )
 
      colnames(clean.statement)[1] <- "Metric"
      colnames(clean.statement)[2] <- "Units"
