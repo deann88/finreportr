@@ -1,6 +1,6 @@
 #' @import dplyr curl
 
-GetFinancial <- function(statement.type, symbol, year) {
+GetFinancial <- function(symbol, year) {
      
      ##   This is here to please R CMD check
      description <- NULL
